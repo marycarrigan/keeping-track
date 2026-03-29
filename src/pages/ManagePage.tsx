@@ -25,10 +25,10 @@ export function ManagePage() {
   return (
     <div className="p-4 max-w-lg mx-auto">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold text-gray-900">Manage</h1>
+        <h1 className="text-xl font-semibold text-text">Manage</h1>
         <button
           onClick={() => { setEditingCat(null); setShowCatForm(true); }}
-          className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg active:scale-95 transition-transform"
+          className="px-3 py-1.5 text-sm bg-primary hover:bg-primary-hover text-base rounded-lg active:scale-95 transition-all duration-200"
         >
           + Category
         </button>
@@ -37,25 +37,25 @@ export function ManagePage() {
       {categories?.map((cat) => (
         <div key={cat.id} className="mb-3">
           <div
-            className="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-200 cursor-pointer"
+            className="flex items-center justify-between p-3 bg-surface rounded-xl border border-border cursor-pointer hover:bg-elevated transition-colors duration-200"
             onClick={() => setExpandedCat(expandedCat === cat.id ? null : cat.id)}
           >
             <div className="flex items-center gap-2">
-              <span className="text-sm">{expandedCat === cat.id ? '▼' : '▶'}</span>
-              <span className="font-medium text-gray-800">{cat.name}</span>
+              <span className="text-sm text-text-tertiary">{expandedCat === cat.id ? '▼' : '▶'}</span>
+              <span className="font-medium text-text">{cat.name}</span>
               <span className={`text-xs px-1.5 py-0.5 rounded ${
-                cat.type === 'symptom' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
+                cat.type === 'symptom' ? 'bg-symptom-surface text-symptom' : 'bg-habit-surface text-habit'
               }`}>
                 {cat.type}
               </span>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-text-tertiary">
                 {itemsByCat?.[cat.id]?.length ?? 0} items
               </span>
             </div>
             <div className="flex gap-1">
               <button
                 onClick={(e) => { e.stopPropagation(); setEditingCat(cat); setShowCatForm(true); }}
-                className="text-xs text-gray-500 px-2 py-1 hover:bg-gray-100 rounded"
+                className="text-xs text-text-tertiary px-2 py-1 hover:bg-elevated rounded transition-colors"
               >
                 Edit
               </button>
@@ -70,7 +70,7 @@ export function ManagePage() {
                     await db.categories.delete(cat.id);
                   }
                 }}
-                className="text-xs text-red-500 px-2 py-1 hover:bg-red-50 rounded"
+                className="text-xs text-symptom px-2 py-1 hover:bg-symptom-surface rounded transition-colors"
               >
                 Delete
               </button>
@@ -82,14 +82,14 @@ export function ManagePage() {
               {itemsByCat?.[cat.id]?.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg"
+                  className="flex items-center justify-between p-2.5 bg-elevated rounded-lg"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-text-secondary">
                       {item.icon ? `${item.icon} ` : ''}{item.name}
                     </span>
                     {item.isFavorite && (
-                      <span className="text-xs text-yellow-600">★</span>
+                      <span className="text-xs text-yellow-400">★</span>
                     )}
                   </div>
                   <div className="flex gap-1">
@@ -99,17 +99,17 @@ export function ManagePage() {
                           isFavorite: !item.isFavorite,
                         });
                       }}
-                      className={`text-xs px-2 py-1 rounded ${
+                      className={`text-xs px-2 py-1 rounded transition-colors ${
                         item.isFavorite
-                          ? 'text-yellow-600 bg-yellow-50'
-                          : 'text-gray-500 hover:bg-gray-100'
+                          ? 'text-yellow-400 bg-yellow-400/10'
+                          : 'text-text-tertiary hover:bg-elevated'
                       }`}
                     >
                       {item.isFavorite ? '★ Fav' : '☆ Fav'}
                     </button>
                     <button
                       onClick={() => setEditingItem(item)}
-                      className="text-xs text-gray-500 px-2 py-1 hover:bg-gray-100 rounded"
+                      className="text-xs text-text-tertiary px-2 py-1 hover:bg-surface rounded transition-colors"
                     >
                       Edit
                     </button>
@@ -120,7 +120,7 @@ export function ManagePage() {
                           await db.trackableItems.delete(item.id);
                         }
                       }}
-                      className="text-xs text-red-500 px-2 py-1 hover:bg-red-50 rounded"
+                      className="text-xs text-symptom px-2 py-1 hover:bg-symptom-surface rounded transition-colors"
                     >
                       Delete
                     </button>
@@ -129,7 +129,7 @@ export function ManagePage() {
               ))}
               <button
                 onClick={() => { setEditingItem(null); setShowItemForm(cat.id); }}
-                className="w-full text-sm text-primary py-2 hover:bg-indigo-50 rounded-lg"
+                className="w-full text-sm text-primary py-2 hover:bg-primary/10 rounded-lg transition-colors duration-200"
               >
                 + Add Item
               </button>
@@ -194,12 +194,12 @@ function CategoryFormModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-end z-50" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end z-50" onClick={onClose}>
       <div
-        className="bg-white w-full max-w-lg mx-auto rounded-t-2xl p-5 pb-8"
+        className="bg-surface w-full max-w-lg mx-auto rounded-t-2xl p-5 pb-8 border-t border-border"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <h3 className="text-lg font-semibold text-text mb-4">
           {category ? 'Edit Category' : 'New Category'}
         </h3>
         <div className="space-y-3">
@@ -209,25 +209,25 @@ function CategoryFormModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoFocus
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-text placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           />
           <div className="flex gap-2">
             <button
               onClick={() => setType('habit')}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-medium border ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 ${
                 type === 'habit'
-                  ? 'bg-green-100 text-green-700 border-green-300'
-                  : 'bg-gray-50 text-gray-600 border-gray-200'
+                  ? 'bg-habit-surface text-habit border-habit-border'
+                  : 'bg-elevated text-text-secondary border-border'
               }`}
             >
               Habit
             </button>
             <button
               onClick={() => setType('symptom')}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-medium border ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 ${
                 type === 'symptom'
-                  ? 'bg-red-100 text-red-700 border-red-300'
-                  : 'bg-gray-50 text-gray-600 border-gray-200'
+                  ? 'bg-symptom-surface text-symptom border-symptom-border'
+                  : 'bg-elevated text-text-secondary border-border'
               }`}
             >
               Symptom
@@ -235,7 +235,7 @@ function CategoryFormModal({
           </div>
           <button
             onClick={handleSave}
-            className="w-full py-3 bg-primary text-white rounded-xl font-medium active:scale-[0.98] transition-transform"
+            className="w-full py-3 bg-primary hover:bg-primary-hover text-base rounded-xl font-medium active:scale-[0.98] transition-all duration-200"
           >
             {category ? 'Save Changes' : 'Create Category'}
           </button>
@@ -280,12 +280,12 @@ function ItemFormModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-end z-50" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end z-50" onClick={onClose}>
       <div
-        className="bg-white w-full max-w-lg mx-auto rounded-t-2xl p-5 pb-8"
+        className="bg-surface w-full max-w-lg mx-auto rounded-t-2xl p-5 pb-8 border-t border-border"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <h3 className="text-lg font-semibold text-text mb-4">
           {item ? 'Edit Item' : 'New Item'}
         </h3>
         <div className="space-y-3">
@@ -295,27 +295,27 @@ function ItemFormModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoFocus
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-text placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           />
           <input
             type="text"
             placeholder="Icon emoji (optional, e.g. ☕)"
             value={icon}
             onChange={(e) => setIcon(e.target.value)}
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-text placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           />
-          <label className="flex items-center gap-2 text-sm text-gray-700">
+          <label className="flex items-center gap-2 text-sm text-text-secondary">
             <input
               type="checkbox"
               checked={isFavorite}
               onChange={(e) => setIsFavorite(e.target.checked)}
-              className="rounded"
+              className="rounded accent-primary"
             />
             Show on Quick Log (favorite)
           </label>
           <button
             onClick={handleSave}
-            className="w-full py-3 bg-primary text-white rounded-xl font-medium active:scale-[0.98] transition-transform"
+            className="w-full py-3 bg-primary hover:bg-primary-hover text-base rounded-xl font-medium active:scale-[0.98] transition-all duration-200"
           >
             {item ? 'Save Changes' : 'Add Item'}
           </button>
@@ -420,26 +420,26 @@ function ExportSection() {
   };
 
   return (
-    <div className="mt-8 pt-6 border-t border-gray-200">
-      <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+    <div className="mt-8 pt-6 border-t border-border">
+      <h2 className="text-sm font-medium text-text-tertiary uppercase tracking-wider mb-3">
         Data Export & Backup
       </h2>
       <div className="space-y-2">
         <button
           onClick={handleCSVExport}
-          className="w-full py-2.5 text-sm text-gray-700 bg-gray-100 rounded-xl active:bg-gray-200"
+          className="w-full py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
         >
           📥 Export CSV
         </button>
         <button
           onClick={handleJSONBackup}
-          className="w-full py-2.5 text-sm text-gray-700 bg-gray-100 rounded-xl active:bg-gray-200"
+          className="w-full py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
         >
           💾 Backup (JSON)
         </button>
         <button
           onClick={handleJSONRestore}
-          className="w-full py-2.5 text-sm text-gray-700 bg-gray-100 rounded-xl active:bg-gray-200"
+          className="w-full py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
         >
           📤 Restore from Backup
         </button>

@@ -52,12 +52,12 @@ export function TimelinePage() {
 
   return (
     <div className="p-4 max-w-lg mx-auto">
-      <h1 className="text-xl font-semibold text-gray-900 mb-4">Timeline</h1>
+      <h1 className="text-xl font-semibold text-text mb-4">Timeline</h1>
 
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={() => shiftDate(-1)}
-          className="px-3 py-1.5 text-sm text-gray-600 bg-gray-100 rounded-lg active:bg-gray-200"
+          className="px-3 py-1.5 text-sm text-text-secondary bg-elevated rounded-lg active:bg-border transition-colors duration-200"
         >
           ← Prev
         </button>
@@ -65,34 +65,35 @@ export function TimelinePage() {
           type="date"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
-          className="text-sm text-gray-700 border border-gray-300 rounded-lg px-2 py-1.5"
+          className="text-sm text-text bg-elevated border border-border rounded-lg px-2 py-1.5 [color-scheme:dark]"
         />
         <button
           onClick={() => shiftDate(1)}
-          className="px-3 py-1.5 text-sm text-gray-600 bg-gray-100 rounded-lg active:bg-gray-200"
+          className="px-3 py-1.5 text-sm text-text-secondary bg-elevated rounded-lg active:bg-border transition-colors duration-200"
         >
           Next →
         </button>
       </div>
 
       {(!entries || entries.length === 0) && (
-        <p className="text-center text-gray-500 py-8">No entries for this day.</p>
+        <p className="text-center text-text-tertiary py-8">No entries for this day.</p>
       )}
 
       <div className="space-y-2">
         {entries?.map((entry) => {
           const item = itemMap[entry.itemId];
           const cat = item ? catMap[item.categoryId] : null;
+          const isSymptom = cat?.type === 'symptom';
           return (
             <div
               key={entry.id}
-              className={`flex items-start gap-3 p-3 rounded-xl border ${
-                cat?.type === 'symptom'
-                  ? 'border-red-200 bg-red-50/50'
-                  : 'border-indigo-200 bg-indigo-50/50'
+              className={`flex items-start gap-3 p-3 rounded-xl border-l-2 bg-surface ${
+                isSymptom
+                  ? 'border-l-symptom'
+                  : 'border-l-primary'
               }`}
             >
-              <div className="text-xs text-gray-500 pt-0.5 w-16 shrink-0">
+              <div className="text-xs text-text-tertiary pt-0.5 w-16 shrink-0">
                 {new Date(entry.timestamp).toLocaleTimeString('en-US', {
                   hour: 'numeric',
                   minute: '2-digit',
@@ -100,24 +101,24 @@ export function TimelinePage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-800">
+                  <span className="text-sm font-medium text-text">
                     {item?.icon ? `${item.icon} ` : ''}
                     {item?.name ?? 'Unknown'}
                   </span>
-                  <span className="text-xs text-gray-400">{cat?.name}</span>
+                  <span className="text-xs text-text-tertiary">{cat?.name}</span>
                 </div>
                 {entry.value != null && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-text-secondary">
                     {entry.value}{entry.unit ?? ''}
                   </span>
                 )}
                 {entry.notes && (
-                  <p className="text-xs text-gray-500 mt-0.5">{entry.notes}</p>
+                  <p className="text-xs text-text-tertiary mt-0.5">{entry.notes}</p>
                 )}
               </div>
               <button
                 onClick={() => deleteEntry(entry.id)}
-                className="text-gray-400 hover:text-red-500 text-xs shrink-0"
+                className="text-text-tertiary hover:text-symptom text-xs shrink-0 transition-colors duration-200"
               >
                 ✕
               </button>

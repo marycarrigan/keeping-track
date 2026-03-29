@@ -25,16 +25,16 @@ export function LogDetailModal({ item, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-end z-50" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end z-50" onClick={onClose}>
       <div
-        className="bg-white w-full max-w-lg mx-auto rounded-t-2xl p-5 pb-8"
+        className="bg-surface w-full max-w-lg mx-auto rounded-t-2xl p-5 pb-8 border-t border-border"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-text">
             {item.icon ? `${item.icon} ` : ''}{item.name}
           </h3>
-          <button onClick={onClose} className="text-gray-400 text-xl">&times;</button>
+          <button onClick={onClose} className="text-text-tertiary hover:text-text-secondary text-xl transition-colors">&times;</button>
         </div>
 
         <div className="space-y-3">
@@ -44,14 +44,14 @@ export function LogDetailModal({ item, onClose }: Props) {
               placeholder="Value (e.g. 3)"
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="flex-1 px-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1 px-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-text placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
             />
             <input
               type="text"
               placeholder="Unit (e.g. /10, oz)"
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
-              className="w-28 px-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-28 px-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-text placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
             />
           </div>
 
@@ -60,12 +60,12 @@ export function LogDetailModal({ item, onClose }: Props) {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+            className="w-full px-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-text placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none transition-all"
           />
 
           <button
             onClick={handleSave}
-            className="w-full py-3 bg-primary text-white rounded-xl font-medium active:scale-[0.98] transition-transform"
+            className="w-full py-3 bg-primary hover:bg-primary-hover text-base rounded-xl font-medium active:scale-[0.98] transition-all duration-200"
           >
             Log Entry
           </button>

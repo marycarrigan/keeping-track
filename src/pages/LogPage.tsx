@@ -63,8 +63,8 @@ export function LogPage() {
   return (
     <div className="p-4 max-w-lg mx-auto">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold text-gray-900">Quick Log</h1>
-        <span className="text-sm text-gray-500">
+        <h1 className="text-xl font-semibold text-text">Quick Log</h1>
+        <span className="text-sm text-text-tertiary">
           {new Date().toLocaleDateString('en-US', {
             weekday: 'short',
             month: 'short',
@@ -74,10 +74,10 @@ export function LogPage() {
       </div>
 
       {(!favorites || favorites.length === 0) && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-text-tertiary">
           <p className="text-lg mb-2">No favorite items yet</p>
-          <p className="text-sm">
-            Go to <strong>Manage</strong> to add categories and items, then mark them as favorites
+          <p className="text-sm text-text-secondary">
+            Go to <strong className="text-text">Manage</strong> to add categories and items, then mark them as favorites
             to see quick-tap buttons here.
           </p>
         </div>
@@ -91,7 +91,7 @@ export function LogPage() {
           if (!items || items.length === 0) return null;
           return (
             <div key={cat.id} className="mb-4">
-              <h2 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+              <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider mb-2">
                 {cat.name}
               </h2>
               <div className="flex flex-wrap gap-2">
@@ -103,12 +103,12 @@ export function LogPage() {
                       e.preventDefault();
                       setDetailItem(item);
                     }}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95 ${
+                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 active:scale-95 ${
                       isRecent(item.id)
-                        ? 'bg-green-100 text-green-700 ring-2 ring-green-400'
+                        ? 'bg-success-surface text-success ring-2 ring-success/40'
                         : cat.type === 'symptom'
-                          ? 'bg-red-50 text-red-700 border border-red-200'
-                          : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                          ? 'bg-symptom-surface text-symptom border border-symptom-border hover:bg-symptom-surface/80'
+                          : 'bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15'
                     }`}
                   >
                     {item.icon ? `${item.icon} ` : ''}
@@ -123,14 +123,14 @@ export function LogPage() {
 
       <button
         onClick={() => setShowQuickAdd(true)}
-        className="fixed bottom-20 right-4 w-14 h-14 bg-primary text-white rounded-full shadow-lg text-2xl flex items-center justify-center active:scale-95 transition-transform"
+        className="fixed bottom-20 right-4 w-14 h-14 bg-primary text-base rounded-full shadow-[0_0_20px_var(--color-primary-glow)] text-2xl flex items-center justify-center active:scale-95 transition-all duration-200 hover:bg-primary-hover"
       >
         +
       </button>
 
       {recentEntries && recentEntries.length > 0 && (
         <div className="mt-6">
-          <h2 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
+          <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider mb-2">
             Logged Today ({recentEntries.length})
           </h2>
           <RecentEntriesList entries={recentEntries} />
@@ -165,16 +165,16 @@ function RecentEntriesList({ entries }: { entries: import('../db').LogEntry[] })
             key={entry.id}
             className="flex items-center justify-between py-1.5 px-2 rounded-lg text-sm"
           >
-            <span className="text-gray-700">
+            <span className="text-text-secondary">
               {item?.icon ? `${item.icon} ` : ''}
               {item?.name ?? 'Unknown'}
               {entry.value != null && (
-                <span className="text-gray-500 ml-1">
+                <span className="text-text-tertiary ml-1">
                   ({entry.value}{entry.unit ?? ''})
                 </span>
               )}
             </span>
-            <span className="text-gray-400 text-xs">
+            <span className="text-text-tertiary text-xs">
               {new Date(entry.timestamp).toLocaleTimeString('en-US', {
                 hour: 'numeric',
                 minute: '2-digit',
