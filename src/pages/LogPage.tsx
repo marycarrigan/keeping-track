@@ -1,10 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Plus, Trash2 } from 'lucide-react';
 import { db } from '../db';
-import type { TrackableItem, Category } from '../db';
+import type { TrackableItem, Category, Combo } from '../db';
 import { LogDetailModal } from '../components/LogDetailModal';
 import { QuickAddModal } from '../components/QuickAddModal';
+import { ComboLogModal } from '../components/ComboLogModal';
 
 export function LogPage() {
   const categories = useLiveQuery(() => db.categories.orderBy('sortOrder').toArray());
@@ -22,9 +23,32 @@ export function LogPage() {
     []
   );
 
+  const combos = useLiveQuery(() => db.combos.toArray());
+
   const [detailItem, setDetailItem] = useState<TrackableItem | null>(null);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
-  const [recentItems, setRecentItems] = useState<Map<string, number>>(new Map());
+  const [activeCombo, setActiveCombo] = useState<Combo | null>(null);
+  const [recentItems, setRecentItems] = useState<Set<string>>(new Set());
+  const [recentCombos, setRecentCombos] = useState<Set<string>>(new Set());
+  const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+
+  const flashRecent = useCallback((id: string, type: 'item' | 'combo') => {
+    const setter = type === 'item' ? setRecentItems : setRecentCombos;
+    setter((prev) => new Set(prev).add(id));
+
+    // Clear any existing timer for this id
+    const existing = timersRef.current.get(id);
+    if (existing) clearTimeout(existing);
+
+    timersRef.current.set(id, setTimeout(() => {
+      setter((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+      timersRef.current.delete(id);
+    }, 1500));
+  }, []);
 
   const quickLog = useCallback(async (item: TrackableItem) => {
     await db.logEntries.add({
@@ -32,12 +56,8 @@ export function LogPage() {
       itemId: item.id,
       timestamp: new Date(),
     });
-    setRecentItems((prev) => {
-      const next = new Map(prev);
-      next.set(item.id, Date.now());
-      return next;
-    });
-  }, []);
+    flashRecent(item.id, 'item');
+  }, [flashRecent]);
 
   const itemsByCategory = favorites?.reduce(
     (acc, item) => {
@@ -56,9 +76,12 @@ export function LogPage() {
     {} as Record<string, Category>
   );
 
-  const isRecent = (itemId: string) => {
-    const ts = recentItems.get(itemId);
-    return ts && Date.now() - ts < 2000;
+  const isRecent = (itemId: string) => recentItems.has(itemId);
+  const isRecentCombo = (comboId: string) => recentCombos.has(comboId);
+
+  const handleComboLogged = (combo: Combo) => {
+    setActiveCombo(null);
+    flashRecent(combo.id, 'combo');
   };
 
   return (
@@ -74,7 +97,7 @@ export function LogPage() {
         </span>
       </div>
 
-      {(!favorites || favorites.length === 0) && (
+      {(!favorites || favorites.length === 0) && (!combos || combos.length === 0) && (
         <div className="text-center py-12 text-text-tertiary">
           <p className="text-lg mb-2">No favorite items yet</p>
           <p className="text-sm text-text-secondary">
@@ -88,14 +111,30 @@ export function LogPage() {
         categoryMap &&
         itemsByCategory &&
         categories.map((cat) => {
-          const items = itemsByCategory[cat.id];
-          if (!items || items.length === 0) return null;
+          const items = itemsByCategory[cat.id] ?? [];
+          const catCombos = combos?.filter((c) => c.categoryId === cat.id) ?? [];
+          if (items.length === 0 && catCombos.length === 0) return null;
           return (
             <div key={cat.id} className="mb-4">
               <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider mb-2">
                 {cat.name}
               </h2>
               <div className="flex flex-wrap gap-2">
+                {catCombos.map((combo) => (
+                  <button
+                    key={combo.id}
+                    onClick={() => setActiveCombo(combo)}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 active:scale-95 ${
+                      isRecentCombo(combo.id)
+                        ? 'bg-success-surface text-success ring-2 ring-success/40'
+                        : 'bg-primary/5 text-primary border border-dashed border-primary/30 hover:bg-primary/10'
+                    }`}
+                  >
+                    {combo.icon ? `${combo.icon} ` : ''}{combo.name}
+                    <span className="text-xs opacity-60 ml-1">({combo.items.length})</span>
+                    {isRecentCombo(combo.id) && ' ✓'}
+                  </button>
+                ))}
                 {items.map((item) => (
                   <button
                     key={item.id}
@@ -144,6 +183,13 @@ export function LogPage() {
 
       {showQuickAdd && (
         <QuickAddModal onClose={() => setShowQuickAdd(false)} />
+      )}
+
+      {activeCombo && (
+        <ComboLogModal
+          combo={activeCombo}
+          onClose={() => handleComboLogged(activeCombo)}
+        />
       )}
     </div>
   );

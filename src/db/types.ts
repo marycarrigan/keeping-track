@@ -23,3 +23,17 @@ export interface LogEntry {
   unit?: string;
   notes?: string;
 }
+
+export interface ComboItem {
+  itemId: string;
+  sortOrder: number;
+}
+
+export interface Combo {
+  id: string;
+  categoryId: string;
+  name: string;
+  icon?: string;
+  items: ComboItem[];
+  createdAt: Date;
+}

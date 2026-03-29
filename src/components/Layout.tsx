@@ -1,11 +1,12 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { Zap, CalendarDays, BarChart3, Settings } from 'lucide-react';
+import { Zap, CalendarDays, BarChart3, Settings, Database } from 'lucide-react';
 
 const navItems = [
   { to: '/', label: 'Log', icon: Zap },
   { to: '/timeline', label: 'Timeline', icon: CalendarDays },
   { to: '/trends', label: 'Trends', icon: BarChart3 },
   { to: '/manage', label: 'Manage', icon: Settings },
+  { to: '/data', label: 'Data', icon: Database },
 ];
 
 export function Layout() {

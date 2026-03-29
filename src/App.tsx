@@ -5,6 +5,7 @@ import { LogPage } from './pages/LogPage';
 import { TimelinePage } from './pages/TimelinePage';
 import { TrendsPage } from './pages/TrendsPage';
 import { ManagePage } from './pages/ManagePage';
+import { DataPage } from './pages/DataPage';
 import { seedDefaultData } from './db';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/trends" element={<TrendsPage />} />
           <Route path="/manage" element={<ManagePage />} />
+          <Route path="/data" element={<DataPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
