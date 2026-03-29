@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { db } from '../db';
 import type { TrackableItem, Category } from '../db';
 import { LogDetailModal } from '../components/LogDetailModal';
@@ -164,7 +164,7 @@ function RecentEntriesList({ entries }: { entries: import('../db').LogEntry[] })
         return (
           <div
             key={entry.id}
-            className="flex items-center justify-between py-1.5 px-2 rounded-lg text-sm"
+            className="flex items-center justify-between py-1.5 px-2 rounded-lg text-sm group"
           >
             <span className="text-text-secondary">
               {item?.icon ? `${item.icon} ` : ''}
@@ -175,12 +175,20 @@ function RecentEntriesList({ entries }: { entries: import('../db').LogEntry[] })
                 </span>
               )}
             </span>
-            <span className="text-text-tertiary text-xs">
-              {new Date(entry.timestamp).toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-              })}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-text-tertiary text-xs">
+                {new Date(entry.timestamp).toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                })}
+              </span>
+              <button
+                onClick={() => db.logEntries.delete(entry.id)}
+                className="text-text-tertiary hover:text-symptom transition-colors duration-200 p-0.5 rounded hover:bg-symptom-surface opacity-0 group-hover:opacity-100"
+              >
+                <Trash2 size={13} />
+              </button>
+            </div>
           </div>
         );
       })}
