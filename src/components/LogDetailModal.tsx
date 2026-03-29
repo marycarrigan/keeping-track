@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { X } from 'lucide-react';
 import { db } from '../db';
 import type { TrackableItem } from '../db';
 
@@ -34,7 +35,7 @@ export function LogDetailModal({ item, onClose }: Props) {
           <h3 className="text-lg font-semibold text-text">
             {item.icon ? `${item.icon} ` : ''}{item.name}
           </h3>
-          <button onClick={onClose} className="text-text-tertiary hover:text-text-secondary text-xl transition-colors">&times;</button>
+          <button onClick={onClose} className="text-text-tertiary hover:text-text-secondary transition-colors p-1 rounded-lg hover:bg-elevated"><X size={18} /></button>
         </div>
 
         <div className="space-y-3">

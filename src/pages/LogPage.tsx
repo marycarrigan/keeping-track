@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { Plus } from 'lucide-react';
 import { db } from '../db';
 import type { TrackableItem, Category } from '../db';
 import { LogDetailModal } from '../components/LogDetailModal';
@@ -123,9 +124,9 @@ export function LogPage() {
 
       <button
         onClick={() => setShowQuickAdd(true)}
-        className="fixed bottom-20 right-4 w-14 h-14 bg-primary text-base rounded-full shadow-[0_0_20px_var(--color-primary-glow)] text-2xl flex items-center justify-center active:scale-95 transition-all duration-200 hover:bg-primary-hover"
+        className="fixed bottom-20 right-4 w-14 h-14 bg-primary text-base rounded-full shadow-[0_0_20px_var(--color-primary-glow)] flex items-center justify-center active:scale-95 transition-all duration-200 hover:bg-primary-hover"
       >
-        +
+        <Plus size={24} strokeWidth={2.5} />
       </button>
 
       {recentEntries && recentEntries.length > 0 && (

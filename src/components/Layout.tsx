@@ -1,10 +1,11 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { Zap, CalendarDays, BarChart3, Settings } from 'lucide-react';
 
 const navItems = [
-  { to: '/', label: 'Log', icon: '⚡' },
-  { to: '/timeline', label: 'Timeline', icon: '📋' },
-  { to: '/trends', label: 'Trends', icon: '📊' },
-  { to: '/manage', label: 'Manage', icon: '⚙️' },
+  { to: '/', label: 'Log', icon: Zap },
+  { to: '/timeline', label: 'Timeline', icon: CalendarDays },
+  { to: '/trends', label: 'Trends', icon: BarChart3 },
+  { to: '/manage', label: 'Manage', icon: Settings },
 ];
 
 export function Layout() {
@@ -27,9 +28,11 @@ export function Layout() {
             >
               {({ isActive }) => (
                 <>
-                  <span className={`text-xl mb-0.5 ${isActive ? 'drop-shadow-[0_0_6px_var(--color-primary-glow)]' : ''}`}>
-                    {item.icon}
-                  </span>
+                  <item.icon
+                    size={20}
+                    strokeWidth={isActive ? 2.25 : 1.75}
+                    className={`mb-0.5 ${isActive ? 'drop-shadow-[0_0_6px_var(--color-primary-glow)]' : ''}`}
+                  />
                   <span className={isActive ? 'font-medium' : ''}>{item.label}</span>
                 </>
               )}

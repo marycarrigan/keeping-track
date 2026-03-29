@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { X, Search } from 'lucide-react';
 import { db } from '../db';
 import type { TrackableItem, Category } from '../db';
 import { LogDetailModal } from './LogDetailModal';
@@ -51,17 +52,20 @@ export function QuickAddModal({ onClose }: { onClose: () => void }) {
       >
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-text">Log an Item</h3>
-          <button onClick={onClose} className="text-text-tertiary hover:text-text-secondary text-xl transition-colors">&times;</button>
+          <button onClick={onClose} className="text-text-tertiary hover:text-text-secondary transition-colors p-1 rounded-lg hover:bg-elevated"><X size={18} /></button>
         </div>
 
-        <input
-          type="text"
-          placeholder="Search items..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          autoFocus
-          className="w-full px-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-text placeholder:text-text-tertiary mb-3 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-        />
+        <div className="relative mb-3">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary" />
+          <input
+            type="text"
+            placeholder="Search items..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            autoFocus
+            className="w-full pl-9 pr-3 py-2.5 bg-elevated border border-border rounded-xl text-sm text-text placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+          />
+        </div>
 
         <div className="overflow-y-auto flex-1">
           {(!filtered || filtered.length === 0) && (

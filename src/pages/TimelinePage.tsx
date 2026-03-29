@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 import { db } from '../db';
 
 export function TimelinePage() {
@@ -57,9 +58,9 @@ export function TimelinePage() {
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={() => shiftDate(-1)}
-          className="px-3 py-1.5 text-sm text-text-secondary bg-elevated rounded-lg active:bg-border transition-colors duration-200"
+          className="flex items-center gap-1 px-3 py-1.5 text-sm text-text-secondary bg-elevated rounded-lg active:bg-border transition-colors duration-200"
         >
-          ← Prev
+          <ChevronLeft size={16} /> Prev
         </button>
         <input
           type="date"
@@ -69,9 +70,9 @@ export function TimelinePage() {
         />
         <button
           onClick={() => shiftDate(1)}
-          className="px-3 py-1.5 text-sm text-text-secondary bg-elevated rounded-lg active:bg-border transition-colors duration-200"
+          className="flex items-center gap-1 px-3 py-1.5 text-sm text-text-secondary bg-elevated rounded-lg active:bg-border transition-colors duration-200"
         >
-          Next →
+          Next <ChevronRight size={16} />
         </button>
       </div>
 
@@ -118,9 +119,9 @@ export function TimelinePage() {
               </div>
               <button
                 onClick={() => deleteEntry(entry.id)}
-                className="text-text-tertiary hover:text-symptom text-xs shrink-0 transition-colors duration-200"
+                className="text-text-tertiary hover:text-symptom shrink-0 transition-colors duration-200 p-1 rounded-lg hover:bg-symptom-surface"
               >
-                ✕
+                <Trash2 size={14} />
               </button>
             </div>
           );

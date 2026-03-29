@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { ChevronDown, ChevronRight, Pencil, Trash2, Star, Plus, Download, Upload, Save } from 'lucide-react';
 import { db } from '../db';
 import type { Category, TrackableItem } from '../db';
 
@@ -28,9 +29,9 @@ export function ManagePage() {
         <h1 className="text-xl font-semibold text-text">Manage</h1>
         <button
           onClick={() => { setEditingCat(null); setShowCatForm(true); }}
-          className="px-3 py-1.5 text-sm bg-primary hover:bg-primary-hover text-base rounded-lg active:scale-95 transition-all duration-200"
+          className="flex items-center gap-1 px-3 py-1.5 text-sm bg-primary hover:bg-primary-hover text-base rounded-lg active:scale-95 transition-all duration-200"
         >
-          + Category
+          <Plus size={16} /> Category
         </button>
       </div>
 
@@ -41,7 +42,7 @@ export function ManagePage() {
             onClick={() => setExpandedCat(expandedCat === cat.id ? null : cat.id)}
           >
             <div className="flex items-center gap-2">
-              <span className="text-sm text-text-tertiary">{expandedCat === cat.id ? '▼' : '▶'}</span>
+              {expandedCat === cat.id ? <ChevronDown size={16} className="text-text-tertiary" /> : <ChevronRight size={16} className="text-text-tertiary" />}
               <span className="font-medium text-text">{cat.name}</span>
               <span className={`text-xs px-1.5 py-0.5 rounded ${
                 cat.type === 'symptom' ? 'bg-symptom-surface text-symptom' : 'bg-habit-surface text-habit'
@@ -55,9 +56,9 @@ export function ManagePage() {
             <div className="flex gap-1">
               <button
                 onClick={(e) => { e.stopPropagation(); setEditingCat(cat); setShowCatForm(true); }}
-                className="text-xs text-text-tertiary px-2 py-1 hover:bg-elevated rounded transition-colors"
+                className="text-text-tertiary p-1.5 hover:bg-elevated rounded-lg transition-colors"
               >
-                Edit
+                <Pencil size={14} />
               </button>
               <button
                 onClick={async (e) => {
@@ -70,9 +71,9 @@ export function ManagePage() {
                     await db.categories.delete(cat.id);
                   }
                 }}
-                className="text-xs text-symptom px-2 py-1 hover:bg-symptom-surface rounded transition-colors"
+                className="text-symptom p-1.5 hover:bg-symptom-surface rounded-lg transition-colors"
               >
-                Delete
+                <Trash2 size={14} />
               </button>
             </div>
           </div>
@@ -89,7 +90,7 @@ export function ManagePage() {
                       {item.icon ? `${item.icon} ` : ''}{item.name}
                     </span>
                     {item.isFavorite && (
-                      <span className="text-xs text-yellow-400">★</span>
+                      <Star size={12} className="text-yellow-400 fill-yellow-400" />
                     )}
                   </div>
                   <div className="flex gap-1">
@@ -99,19 +100,19 @@ export function ManagePage() {
                           isFavorite: !item.isFavorite,
                         });
                       }}
-                      className={`text-xs px-2 py-1 rounded transition-colors ${
+                      className={`p-1.5 rounded-lg transition-colors ${
                         item.isFavorite
                           ? 'text-yellow-400 bg-yellow-400/10'
                           : 'text-text-tertiary hover:bg-elevated'
                       }`}
                     >
-                      {item.isFavorite ? '★ Fav' : '☆ Fav'}
+                      <Star size={14} className={item.isFavorite ? 'fill-yellow-400' : ''} />
                     </button>
                     <button
                       onClick={() => setEditingItem(item)}
-                      className="text-xs text-text-tertiary px-2 py-1 hover:bg-surface rounded transition-colors"
+                      className="text-text-tertiary p-1.5 hover:bg-surface rounded-lg transition-colors"
                     >
-                      Edit
+                      <Pencil size={14} />
                     </button>
                     <button
                       onClick={async () => {
@@ -120,18 +121,18 @@ export function ManagePage() {
                           await db.trackableItems.delete(item.id);
                         }
                       }}
-                      className="text-xs text-symptom px-2 py-1 hover:bg-symptom-surface rounded transition-colors"
+                      className="text-symptom p-1.5 hover:bg-symptom-surface rounded-lg transition-colors"
                     >
-                      Delete
+                      <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
               ))}
               <button
                 onClick={() => { setEditingItem(null); setShowItemForm(cat.id); }}
-                className="w-full text-sm text-primary py-2 hover:bg-primary/10 rounded-lg transition-colors duration-200"
+                className="w-full flex items-center justify-center gap-1 text-sm text-primary py-2 hover:bg-primary/10 rounded-lg transition-colors duration-200"
               >
-                + Add Item
+                <Plus size={16} /> Add Item
               </button>
             </div>
           )}
@@ -427,21 +428,21 @@ function ExportSection() {
       <div className="space-y-2">
         <button
           onClick={handleCSVExport}
-          className="w-full py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
+          className="w-full flex items-center justify-center gap-2 py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
         >
-          📥 Export CSV
+          <Download size={16} /> Export CSV
         </button>
         <button
           onClick={handleJSONBackup}
-          className="w-full py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
+          className="w-full flex items-center justify-center gap-2 py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
         >
-          💾 Backup (JSON)
+          <Save size={16} /> Backup (JSON)
         </button>
         <button
           onClick={handleJSONRestore}
-          className="w-full py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
+          className="w-full flex items-center justify-center gap-2 py-2.5 text-sm text-text-secondary bg-elevated rounded-xl active:bg-border hover:bg-border transition-colors duration-200"
         >
-          📤 Restore from Backup
+          <Upload size={16} /> Restore from Backup
         </button>
       </div>
     </div>
